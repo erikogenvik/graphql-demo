@@ -1,0 +1,7 @@
+{
+  "generator-react-webpack": {
+    "appName": "frontend",
+    "style": "css",
+    "postcss": false
+  }
+}
