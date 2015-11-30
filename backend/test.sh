@@ -1,0 +1,1 @@
+curl -H "Content-Type: application/json" -X POST -d "{people {firstName}}"  localhost:8080/graphql
