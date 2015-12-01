@@ -20,6 +20,19 @@ let PeopleStore = Reflux.createStore({
       });
     },
 
+    createPerson: function(person) {
+      $.ajax({
+        url: 'http://localhost:8080/graphql',
+        type: 'POST',
+        processData: false,
+        contentType: 'application/json',
+        data: `mutation M {createPerson(firstName: "${person.firstName}", lastName: "${person.lastName}"){firstName, lastName}}`,
+        success: data => {
+          this.fetchAll();
+        }
+      });
+    },
+
     init: function() {
       this.fetchAll();
     }

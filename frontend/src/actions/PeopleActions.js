@@ -1,7 +1,8 @@
 import Reflux from 'reflux';
 
 let PeopleActions = Reflux.createActions([
-  'fetchAll'
+  'fetchAll',
+  'createPerson'
 ]);
 
 export default PeopleActions;

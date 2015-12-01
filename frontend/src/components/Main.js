@@ -3,6 +3,7 @@ require('styles/App.css');
 
 import React from 'react';
 import People from './People';
+import NewPerson from './NewPerson';
 
 
 class AppComponent extends React.Component {
@@ -10,6 +11,7 @@ class AppComponent extends React.Component {
     return (
       <div className="index">
         <People />
+        <NewPerson />
       </div>
     );
   }
