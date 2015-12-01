@@ -3,6 +3,10 @@ package com.jayway.kdag.graphql;
 import graphql.Scalars;
 import graphql.schema.*;
 
+import java.util.List;
+import java.util.UUID;
+
+import static graphql.schema.GraphQLArgument.newArgument;
 import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
 import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLSchema.newSchema;
@@ -39,5 +43,26 @@ public class Schema {
                     .build())
             .build();
 
-    public static GraphQLSchema MainSchema = newSchema().query(QueryType).build();
+    public static GraphQLObjectType MutationType = newObject()
+            .name("PersonMutation")
+            .field(newFieldDefinition()
+                    .name("createPerson")
+                    .type(PersonType)
+                    .argument(newArgument().name("firstName").type(Scalars.GraphQLString).build())
+                    .argument(newArgument().name("lastName").type(Scalars.GraphQLString).build())
+                    .dataFetcher(new DataFetcher() {
+                        @Override
+                        public Object get(DataFetchingEnvironment environment) {
+                            List<Person> people = (List<Person>) environment.getContext();
+                            Person person = new Person();
+                            person.firstName = environment.getArgument("firstName");
+                            person.lastName = environment.getArgument("lastName");
+                            person.id = UUID.randomUUID().toString();
+                            people.add(person);
+                            return person;
+                        }
+                    })
+                    .build())
+            .build();
+    public static GraphQLSchema MainSchema = newSchema().query(QueryType).mutation(MutationType).build();
 }
