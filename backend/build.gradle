@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.3.0.RELEASE'
+        springBootVersion = '1.5.2.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -12,7 +12,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
 
 jar {
     baseName = 'backend'
@@ -29,11 +29,12 @@ repositories {
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile "com.graphql-java:graphql-java-annotations:0.13.1"
+   // compile 'io.javaslang:javaslang:2.0.6'
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.7'
+    gradleVersion = '3.5'
 }
 
 tasks.withType(JavaCompile) {

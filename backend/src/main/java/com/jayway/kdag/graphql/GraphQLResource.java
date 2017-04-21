@@ -5,19 +5,14 @@ import graphql.GraphQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by erik on 2015-11-23.
- */
+
 @RestController
 @RequestMapping(value = "/graphql")
 public class GraphQLResource {
@@ -26,6 +21,8 @@ public class GraphQLResource {
 
     private final List<Person> people = new ArrayList<>();
     private final Schema schema = new Schema();
+    private final GraphQL graphQL = new GraphQL(schema.mainSchema);
+    private final Persons persons = new Persons(people);
 
     public GraphQLResource() throws IllegalAccessException, NoSuchMethodException, InstantiationException {
     }
@@ -39,10 +36,11 @@ public class GraphQLResource {
         people.add(person);
     }
 
+    @CrossOrigin(origins = "http://localhost:8000")
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity query(@RequestBody String query) {
-        GraphQL graphQL = new GraphQL(schema.mainSchema);
-        Persons persons = new Persons(people);
+
+
         ExecutionResult result = graphQL.execute(query, persons);
 
         result.getErrors().forEach(graphQLError -> log.error("Error in query.", graphQLError));

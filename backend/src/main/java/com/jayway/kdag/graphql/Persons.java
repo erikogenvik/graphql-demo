@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by erik on 2017-04-21.
- */
 public class Persons implements PersonMutation, PersonQuery {
 
     private final List<Person> people;

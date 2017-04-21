@@ -5,13 +5,13 @@ import graphql.annotations.GraphQLField;
 /**
  * Created by erik on 2015-11-29.
  */
-class Person {
+public class Person {
 
     @GraphQLField
-    String id;
+    public String id;
     @GraphQLField
-    String firstName;
+    public String firstName;
     @GraphQLField
-    String lastName;
+    public String lastName;
 
 }

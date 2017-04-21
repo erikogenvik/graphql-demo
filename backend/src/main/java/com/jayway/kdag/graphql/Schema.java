@@ -6,15 +6,13 @@ import graphql.schema.GraphQLSchema;
 
 import static graphql.schema.GraphQLSchema.newSchema;
 
-/**
- * Created by erik on 2015-11-29.
- */
 class Schema {
 
     final GraphQLSchema mainSchema;
 
     Schema() throws IllegalAccessException, NoSuchMethodException, InstantiationException {
 
+        GraphQLAnnotations.object(Person.class);
         GraphQLObjectType personQuery = GraphQLAnnotations.object(PersonQuery.class);
         GraphQLObjectType personMutation = GraphQLAnnotations.object(PersonMutation.class);
         mainSchema = newSchema().query(personQuery).mutation(personMutation).build();
