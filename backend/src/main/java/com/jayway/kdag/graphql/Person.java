@@ -1,12 +1,17 @@
 package com.jayway.kdag.graphql;
 
+import graphql.annotations.GraphQLField;
+
 /**
  * Created by erik on 2015-11-29.
  */
-public class Person {
+class Person {
 
-    public String id;
-    public String firstName;
-    public String lastName;
+    @GraphQLField
+    String id;
+    @GraphQLField
+    String firstName;
+    @GraphQLField
+    String lastName;
 
 }
