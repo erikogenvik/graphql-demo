@@ -1,5 +1,6 @@
 import React from 'react';
 import PeopleStore from '../stores/PeopleStore';
+import PeopleActions from '../actions/PeopleActions';
 
 class People extends React.Component {
 
@@ -24,7 +25,7 @@ class People extends React.Component {
     return (
       <ul>
         {this.state.people.map(person => (
-          <li>{person.firstName} {person.lastName}</li>
+          <li>{person.firstName} {person.lastName} <button onClick={event => PeopleActions.deletePerson(person)}>Delete</button></li>
         ))}
       </ul>
     );

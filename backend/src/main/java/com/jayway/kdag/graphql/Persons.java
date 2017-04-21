@@ -51,6 +51,19 @@ public class Persons implements PersonMutation, PersonQuery {
     }
 
     @Override
+    public boolean deletePerson(String id) {
+        try {
+            Document existingDocument = dataStore.getDatabase().getExistingDocument(id);
+            if (existingDocument != null) {
+                return existingDocument.delete();
+            }
+        } catch (CouchbaseLiteException e) {
+            log.error("Error when deleting from database.", e);
+        }
+        return false;
+    }
+
+    @Override
     public List<Person> people() {
         try {
             final QueryEnumerator result = dataStore.getDatabase().createAllDocumentsQuery().run();

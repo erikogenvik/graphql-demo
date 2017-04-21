@@ -29,11 +29,9 @@ public class GraphQLResource {
     @CrossOrigin(origins = "http://localhost:8000")
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity query(@RequestBody String query) {
-
-
         ExecutionResult result = graphQL.execute(query, persons);
 
-        result.getErrors().forEach(graphQLError -> log.error("Error in query.", graphQLError));
+        result.getErrors().forEach(graphQLError -> log.error("Error in query: {}", graphQLError.getMessage()));
         return ResponseEntity.ok(result.getData());
     }
 }
