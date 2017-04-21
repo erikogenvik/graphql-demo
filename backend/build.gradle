@@ -29,7 +29,8 @@ repositories {
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile "com.graphql-java:graphql-java-annotations:0.13.1"
-   // compile 'io.javaslang:javaslang:2.0.6'
+    compile group: 'com.couchbase.lite', name: 'couchbase-lite-java', version: '1.4.0'
+    compile 'io.javaslang:javaslang:2.0.6'
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 

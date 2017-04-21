@@ -1,5 +1,6 @@
 package com.jayway.kdag.graphql;
 
+import com.couchbase.lite.CouchbaseLiteException;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import org.slf4j.Logger;
@@ -7,10 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @RestController
@@ -19,21 +18,12 @@ public class GraphQLResource {
 
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final List<Person> people = new ArrayList<>();
+    private final DataStore dataStore = new DataStore();
     private final Schema schema = new Schema();
     private final GraphQL graphQL = new GraphQL(schema.mainSchema);
-    private final Persons persons = new Persons(people);
+    private final Persons persons = new Persons(dataStore);
 
-    public GraphQLResource() throws IllegalAccessException, NoSuchMethodException, InstantiationException {
-    }
-
-    @PostConstruct
-    void postConstruct() {
-        Person person = new Person();
-        person.firstName = "Erik";
-        person.lastName = "Ogenvik";
-        person.id = "erik_ogenvik";
-        people.add(person);
+    public GraphQLResource() throws IllegalAccessException, NoSuchMethodException, InstantiationException, IOException, CouchbaseLiteException {
     }
 
     @CrossOrigin(origins = "http://localhost:8000")
