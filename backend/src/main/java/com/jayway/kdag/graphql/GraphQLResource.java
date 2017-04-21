@@ -5,6 +5,7 @@ import graphql.ExecutionResult;
 import graphql.GraphQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ import java.lang.invoke.MethodHandles;
 
 
 @RestController
-@RequestMapping(value = "/graphql")
+@RequestMapping(value = "/graphql", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class GraphQLResource {
 
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
