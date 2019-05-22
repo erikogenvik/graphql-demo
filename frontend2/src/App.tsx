@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from "react";
 import './App.css';
 import ApolloClient from "apollo-client/ApolloClient";
 import {ApolloProvider, Mutation, Query} from 'react-apollo';
@@ -33,28 +33,40 @@ const CREATE_PERSON = gql`
     }
 `;
 
-class App extends React.Component {
+interface Data {
+    people: Array<{ id: string; firstName: string, lastName: string }>;
+}
+
+interface Variables {
+    firstName: string;
+    lastName: string
+}
+
+class App extends Component<{}, Variables> {
 
     render() {
         return (
             <ApolloProvider client={client}>
                 <div className="App">
                     <header className="App-header">
-                        <Mutation mutation={CREATE_PERSON}>
-                            {(createPerson, { data }) => (
+                        <Mutation<any, Variables> mutation={CREATE_PERSON}>
+                            {(createPerson) => (
                                 <div>
-                                    First name: <input type="text" onChange={event => this.setState({firstName: event.target.value})} />
+                                    First name: <input type="text"
+                                                       onChange={event => this.setState({firstName: event.target.value})}/>
                                     <br/>
-                                    Last name: <input type="text" onChange={event => this.setState({lastName: event.target.value})} />
+                                    Last name: <input type="text"
+                                                      onChange={event => this.setState({lastName: event.target.value})}/>
                                     <br/>
-                                    <button onClick={event => createPerson({ variables:  this.state  })}>Create new</button>
+                                    <button onClick={event => createPerson({variables: this.state})}>Create new</button>
                                 </div>
                             )}
                         </Mutation>
-                        <Query query={GET_PEOPLE}>
+                        <Query<Data> query={GET_PEOPLE}>
                             {({loading, error, data}) => {
                                 if (loading) return "Loading...";
                                 if (error) return `Error! ${error.message}`;
+                                if (!data) return 'No data';
 
                                 return (<ul>{data.people.map((person => {
                                     return (<li>{person.firstName} {person.lastName}</li>)
