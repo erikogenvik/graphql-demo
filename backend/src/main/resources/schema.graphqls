@@ -1,0 +1,20 @@
+type Person {
+    id: String!
+    firstName: String!
+    lastName: String!
+}
+
+type Query {
+    echo(toEcho: String): String
+    people: [Person!]!
+}
+
+type Mutation {
+    createPerson(firstName: String!, lastName: String!): Person!
+
+    deletePerson(id: String!): Boolean!
+}
+
+type Subscription {
+    echoes: String
+}

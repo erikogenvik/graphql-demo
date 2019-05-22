@@ -1,7 +1,7 @@
 buildscript {
     ext.kotlin_version = '1.3.31'
     ext {
-        springBootVersion = '1.5.2.RELEASE'
+        springBootVersion = '2.1.5.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -12,13 +12,16 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'kotlin'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
+plugins {
+    id 'idea'
+    id 'java'
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.31'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.3.31'
+    id "io.spring.dependency-management" version "1.0.7.RELEASE"
+}
 
 jar {
-    baseName = 'backend'
     version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
@@ -30,12 +33,18 @@ repositories {
 
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile "com.graphql-java:graphql-java-annotations:0.13.1"
-    compile group: 'com.couchbase.lite', name: 'couchbase-lite-java', version: '1.4.0'
-    compile 'io.javaslang:javaslang:2.0.6'
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+    implementation('com.graphql-java:graphql-java:12.0')
+    implementation group: 'com.couchbase.lite', name: 'couchbase-lite-java', version: '1.4.0'
+    implementation 'io.javaslang:javaslang:2.0.6'
+    implementation 'io.github.microutils:kotlin-logging:1.6.24'
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:1.3.31"
 }
 
 

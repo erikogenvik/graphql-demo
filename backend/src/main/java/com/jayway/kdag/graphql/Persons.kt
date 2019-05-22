@@ -2,18 +2,17 @@ package com.jayway.kdag.graphql
 
 import com.couchbase.lite.CouchbaseLiteException
 import com.couchbase.lite.Document
-import com.couchbase.lite.QueryEnumerator
-import javaslang.collection.Stream
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
 
 import java.lang.invoke.MethodHandles
 import java.util.HashMap
 
+@Component
 class Persons internal constructor(private val dataStore: DataStore) : PersonMutation, PersonQuery {
 
     override fun createPerson(firstName: String, lastName: String): Person? {
-        try {
+        return try {
             // Create a new document (i.e. a record) in the database.
             val document = dataStore.database.createDocument()
             val properties = HashMap<String, Any>()
@@ -21,14 +20,10 @@ class Persons internal constructor(private val dataStore: DataStore) : PersonMut
             properties["lastName"] = lastName
             document.putProperties(properties)
 
-            val person = Person()
-            person.firstName = firstName
-            person.lastName = lastName
-            person.id = document.id
-            return person
+            Person(document.id, firstName, lastName)
         } catch (e: CouchbaseLiteException) {
             log.error("Error when saving to database.", e)
-            return null
+            null
         }
 
     }
@@ -47,13 +42,13 @@ class Persons internal constructor(private val dataStore: DataStore) : PersonMut
     }
 
     override fun people(): List<Person>? {
-        try {
+        return try {
             val result = dataStore.database.createAllDocumentsQuery().run()
 
-            return result.map { queryRow -> toPerson(queryRow.getDocument()) }
+            result.map { queryRow -> toPerson(queryRow.getDocument()) }
         } catch (e: CouchbaseLiteException) {
             log.error("Error when getting from database.", e)
-            return null
+            null
         }
 
     }
@@ -63,11 +58,7 @@ class Persons internal constructor(private val dataStore: DataStore) : PersonMut
         private val log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
 
         private fun toPerson(document: Document): Person {
-            val person = Person()
-            person.id = document.id
-            person.firstName = document.getProperty("firstName") as String
-            person.lastName = document.getProperty("lastName") as String
-            return person
+            return Person(document.id, document.getProperty("firstName") as String, document.getProperty("lastName") as String)
         }
     }
 }
