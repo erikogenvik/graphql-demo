@@ -1,11 +1,12 @@
 package com.jayway.kdag.graphql
 
+import graphql.annotations.annotationTypes.GraphQLField
 
-/**
- * Created by erik on 2015-11-29.
- */
 data class Person(
+        @GraphQLField
         val id: String,
+        @GraphQLField
         val firstName: String,
+        @GraphQLField
         val lastName: String
 )

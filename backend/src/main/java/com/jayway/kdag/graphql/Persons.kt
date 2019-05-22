@@ -2,14 +2,18 @@ package com.jayway.kdag.graphql
 
 import com.couchbase.lite.CouchbaseLiteException
 import com.couchbase.lite.Document
+import org.reactivestreams.Publisher
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-
+import reactor.core.publisher.DirectProcessor
+import reactor.core.publisher.FluxSink
 import java.lang.invoke.MethodHandles
-import java.util.HashMap
+import java.util.*
 
 @Component
 class Persons internal constructor(private val dataStore: DataStore) : PersonMutation, PersonQuery {
+
+    val sinks = mutableListOf<FluxSink<Person>>()
 
     override fun createPerson(firstName: String, lastName: String): Person? {
         return try {
@@ -20,7 +24,9 @@ class Persons internal constructor(private val dataStore: DataStore) : PersonMut
             properties["lastName"] = lastName
             document.putProperties(properties)
 
-            Person(document.id, firstName, lastName)
+            val person = Person(document.id, firstName, lastName)
+            sinks.forEach { it.next(person) }
+            person
         } catch (e: CouchbaseLiteException) {
             log.error("Error when saving to database.", e)
             null
@@ -45,13 +51,20 @@ class Persons internal constructor(private val dataStore: DataStore) : PersonMut
         return try {
             val result = dataStore.database.createAllDocumentsQuery().run()
 
-            result.map { queryRow -> toPerson(queryRow.getDocument()) }
+            result.map { queryRow -> toPerson(queryRow.document) }
         } catch (e: CouchbaseLiteException) {
             log.error("Error when getting from database.", e)
             null
         }
 
     }
+
+    fun subscribeNew(): Publisher<Person> {
+        val processor = DirectProcessor.create<Person>()
+        sinks.add(processor.sink())
+        return processor
+    }
+
 
     companion object {
 

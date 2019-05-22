@@ -5,16 +5,14 @@ type Person {
 }
 
 type Query {
-    echo(toEcho: String): String
     people: [Person!]!
 }
 
 type Mutation {
     createPerson(firstName: String!, lastName: String!): Person!
-
     deletePerson(id: String!): Boolean!
 }
 
 type Subscription {
-    echoes: String
+    subscribeNew: Person!
 }
